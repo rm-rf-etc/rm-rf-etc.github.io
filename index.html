@@ -1,1 +1,68 @@
-hello world
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Rob Christian by rm-rf-etc</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Rob Christian</h1>
+        <p>I&#39;m a programmer. Here&#39;s some stuff I&#39;ve made.</p>
+
+
+        <p class="view"><a href="https://github.com/rm-rf-etc">View My GitHub Profile</a></p>
+
+      </header>
+      <section>
+        <h1>
+<a id="wip" class="anchor" href="#wip" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WIP</h1>
+
+<h2>
+<a id="concise-experimental-fe-framework" class="anchor" href="#concise-experimental-fe-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Concise: Experimental FE Framework</h2>
+
+<p>Prior to learning React, I started this experiment to test out some ideas I had around data binding and view rendering. I first created connected.js, a library that creates bindable JS Objects and Arrays, and triggers updates using events. This seemed successful, and next I wanted to use it in view rendering. I contemplated using Handlebars, but I had become frustrated at work after an external team had mangled our Handlebars templates and created unnecessary cleanup work. I came up with the idea of representing markup using JS objects. This improves developer experience by enforcing valid DOM structure at all times (no exceptions).</p>
+
+<pre><code>{
+    body: {
+        h1: 'Page Title',
+        div: {
+            p1: 'Lorem ipsum',
+            p2: 'delor sit amit'
+        },
+        button: function() {
+            this.onClick(function() {
+                alert('Click event!')
+            })
+        }
+    }
+}
+</code></pre>
+
+<p>The result was concise.js. Below shows a working To-Do app using concise.js.</p>
+
+<p><code>app example goes here</code></p>
+
+<h2>
+<a id="encore-a-node-mvc" class="anchor" href="#encore-a-node-mvc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encore: A Node MVC</h2>
+
+<p>Back when I was getting interested in node.js, I was frustrated by a seeming lack of structure in express projects. I preferred MVC at the time, so I started toying with ways to make a node app structured more like my favorite MVC's.</p>
+
+<p>First I made a router (I didn't care for the routers I found on github). Express will test all routes in order, which isn't optimal. Runway.js instead tests each segment in order, and supports arbitrary RegEx patterns. Internally, runway uses standard tools from lodash to build a tree by creating each branch and then merging it into the tree.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
