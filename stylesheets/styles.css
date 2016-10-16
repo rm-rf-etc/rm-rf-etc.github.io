@@ -266,3 +266,81 @@ footer {
     color:#444;
   }
 }
+
+#concise-app {
+  border: 1px solid #ccc;
+  padding: 0.85rem 1.5rem 1rem 1.5rem;
+  border-radius: 5px;
+  margin-bottom: 2rem;
+}
+#concise-app .text-centered {
+  text-align: center;
+}
+#concise-app .text-left {
+  text-align: left;
+}
+#concise-app .text-right {
+  text-align: right;
+}
+#todo-component {
+  position: relative;
+}
+#todo-component .auth-me {
+  position: absolute;
+  right: 0;
+}
+#todo-component h1 {
+  /**/
+}
+#todo-component .nav {
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+#todo-component .nav button {
+  margin-left: 1.5px;
+  margin-right: 1.5px;
+}
+#items-list {
+  padding: 0;
+  margin: 0;
+}
+#items-list input[type="text"] {
+  width: calc(100% - 46px);
+  position: absolute;
+  right: 22px;
+  top: 0;
+}
+#items-list li {
+  position: relative;
+  height: 22px;
+}
+#items-list .list-editor {
+  position: relative;
+  width: 100%;
+}
+#items-list input[type="checkbox"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+}
+#items-list button.delete-this {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 22px;
+}
+.list-editor {
+  position: relative;
+  height: 22px;
+}
+.list-editor .new-item-submit {
+  float: right;
+  width: 50px;
+}
+.list-editor .add-item-field {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100% - 60px);
+}
