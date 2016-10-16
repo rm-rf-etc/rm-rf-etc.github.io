@@ -31,21 +31,22 @@
 
 <p>Prior to learning React, I started this experiment to test out some ideas I had around data binding and view rendering. I first created connected.js, a library that creates bindable JS Objects and Arrays, and triggers updates using events. This seemed successful, and next I wanted to use it in view rendering. I contemplated using Handlebars, but I had become frustrated at work after an external team had mangled our Handlebars templates and created unnecessary cleanup work. I came up with the idea of representing markup using JS objects. This approach means valid markup is always enforced.</p>
 
-<pre><code>{
-    body: {
-        h1: 'Page Title',
-        div: {
-            p1: 'Lorem ipsum',
-            p2: 'delor sit amit'
+<div class="highlight highlight-source-js">
+<pre>{
+    body<span class="pl-k">:</span> {
+        h1<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Page Title<span class="pl-pds">'</span></span>,
+        div<span class="pl-k">:</span> {
+            p1<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Lorem ipsum<span class="pl-pds">'</span></span>,
+            p2<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>delor sit amit<span class="pl-pds">'</span></span>
         },
-        button: function() {
-            this.onClick(function() {
-                alert('Click event!')
+        <span class="pl-en">button</span><span class="pl-k">:</span> <span class="pl-k">function</span>(self) {
+            self.<span class="pl-en">onClick</span>(<span class="pl-k">function</span>() {
+                <span class="pl-en">alert</span>(<span class="pl-s"><span class="pl-pds">'</span>Click event!<span class="pl-pds">'</span></span>)
             })
         }
     }
-}
-</code></pre>
+}</pre>
+</div>
 
 <p>The result was concise.js. Below shows a working To-Do app using concise.js.</p>
 
@@ -63,6 +64,6 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
