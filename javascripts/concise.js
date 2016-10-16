@@ -106,7 +106,7 @@ module.exports = function(ctrl){
 
 	// Create the view and attach all the view logic.
 	return {
-		"div.width-12.column":{
+		"div.login-component":{
 			'a.auth-me href="/todos" innerHTML="skip login"':0,
 			'h1 innerHTML="Welcome"':0,
 			'div.width-6.centered':{
@@ -256,7 +256,7 @@ module.exports = function(ctrl){
 
 	// Create the view and attach all the view logic.
 	return {
-		'div.width-12.column':{
+		'div#todo-component':{
 
 			'a.auth-me href="/join" innerHTML="login / register"':0,
 			'h1 innerHTML="To-Do\'s"':0,
@@ -264,19 +264,19 @@ module.exports = function(ctrl){
 			// Include a partial.
 			'div.nav':require('./partials/nav'),
 
-			'div.width-6.columns.centered':{
+			'div.list-container':{
 				'div.list-editor':{
 					'form':function(C$){
 						formLogic.call(this,C$)
 						C$.dom = {
-						'input.full-width type="text" name="new-item-field"':this.newItemInput,
-						'input type="submit"':0
+						'input.add-item-field type="text" name="new-item-field"':this.newItemInput,
+						'input.new-item-submit type="submit" value="add"':0
 						}
 					}
 				},
 
 				// Invoke the each() helper, calling the func on every item in `concise.models.list`.
-				'ul each(list)':function(C$,id,item){
+				'ul#items-list each(list)':function(C$,id,item){
 
 					// Use fn.call() to share `this`, our context object.
 					onEach.call(this,C$,id,item)
@@ -287,13 +287,15 @@ module.exports = function(ctrl){
 						ul_parent.liChild(C$)
 						C$.dom = {
 						'input type="checkbox"':ul_parent.itemCheckbox,
-						'button.delete-this innerHTML="&times;"':ul_parent.itemDelete,
-						'input type="text"':ul_parent.itemInput
+						'input type="text"':ul_parent.itemInput,
+						'button.delete-this innerHTML="&times;"':ul_parent.itemDelete
 						}
 					}
 					}
 				},
-				"button#delete.right innerHTML='clear completed'":deleteButton
+				'div.row.text-right': {
+					"button#delete innerHTML='clear completed'":deleteButton
+				}
 			}
 		}
 	}
