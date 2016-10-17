@@ -1,382 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 /*
-
-Semi-colon line terminators are just FUD. If your minifier can't handle this code, switch to one that is JS-compliant.
-http://blog.izs.me/post/2353458699/an-open-letter-to-javascript-leaders-regarding
-http://inimino.org/~inimino/blog/javascript_semicolons
-
-The only time you EVER need a semi-colon for statement termination:
-;[1,2,3].map(function(val){ 'do stuff' })
-;(function(){ 'do stuff' })
-
-*/
-
-;(function(){
-	var concise = require('concise')
-	concise.viewParent = document.querySelector('#concise-app')
-	// window.concise = concise // For use in debugging.
-
-	new concise.Model('list',[
-		  { "checked":false, "text":"buy almond milk" }
-		, { "checked":false, "text":"breakup with Katey" }
-		, { "checked":false, "text":"schedule dentist appointment" }
-		, { "checked":true,  "text":"end world hunger" }
-		, { "checked":false, "text":"go to swimming lessons" }
-		, { "checked":true,  "text":"get my haircut" }
-		, { "checked":false, "text":"enter the super duper sweetstakes" }
-	])
-
-	concise.get('/data/todos.json',function(data){
-		concise.models.list = data
-	})
-
-	var appViews = {
-		todosComponent: require('./ui/todo-ui.js'),
-		authComponent: require('./ui/auth-form-ui.js')
-	}
-
-
-	/*
-	Controllers
-	The router runs the ctrl function upon route change.
-	*/
-
-	var todosAll = new concise.Controller('todo-all', function(){
-		this.view = appViews.todosComponent
-	})
-
-	var todosDone = new concise.Controller('todo-complete', function(){
-		this.show_when = true
-		this.view = appViews.todosComponent
-	})
-
-	var todosIncomplete = new concise.Controller('todo-incomplete', function(){
-		this.show_when = false
-		this.view = appViews.todosComponent
-	})
-
-	var home = new concise.Controller('home', function(){
-		this.view = appViews.authComponent
-	})
-
-	// concise.routes
-	// ('/', home)
-	// ('/join', home)
-	// ('/todos', todosAll)
-	// ('/todos-complete', todosDone)
-	// ('/todos-incomplete', todosIncomplete)
-	todosAll()
-
-})()
-
-},{"./ui/auth-form-ui.js":2,"./ui/todo-ui.js":4,"concise":5}],2:[function(require,module,exports){
-
-/*
-
-Semi-colon line terminators are just FUD. If your minifier can't handle this code, switch to one that is JS-compliant.
-http://blog.izs.me/post/2353458699/an-open-letter-to-javascript-leaders-regarding
-http://inimino.org/~inimino/blog/javascript_semicolons
-
-*/
-
-
-/**
- * This function is called by the controller constructor.
- * Return an object and Concise creates the view from it.
- * Here you can also add controller event listeners.
- */
-module.exports = function(ctrl){
-	var signup_form_el
-	var signin_form_el
-	var name_$
-	var name_conf_$
-	var pass_$
-	var pass_conf_$
-	var test_name
-	var test_pass
-
-	// The 'active' event happens when the user navigates to the route for the controller.
-	ctrl.onActive(function(){
-		if (signup_form_el.style.display === 'none') {
-			signin_form_el.style.display = 'none'
-			signup_form_el.style.display = 'block'
-		}
-	})
-
-	// Create the view and attach all the view logic.
-	return {
-		"div.login-component":{
-			'a.auth-me href="/todos" innerHTML="skip login"':0,
-			'h1 innerHTML="Welcome"':0,
-			'div.width-6.centered':{
-				"form 1 validate":function(C$){
-					signup_form_el = C$.el
-					C$.dom = {
-					"label innerHTML='Email'":0,
-					"input type='email' name='name' required":function(C$){ name_$ = C$ },
-					"label innerHTML='Confirm Email'":0,
-					"input type='email' name='_name' dataset.error='none' required":function(C$){ name_conf_$ = C$ },
-					"label innerHTML='Password'":0,
-					"input type='password' name='pass' pattern='.{5,20}' required":function(C$){ pass_$ = C$ },
-					"label innerHTML='Confirm Password'":0,
-					"input type='password' name='_pass' pattern='.{5,20}' dataset.error='none' required":function(C$){ pass_conf_$ = C$ },
-					"button.left innerHTML='Sign-In'":gotoSignin,
-					"button.right innerHTML='Submit'":signupSubmit,
-					}
-					test_name = getComparator(C$.model,'name','_name')
-					test_pass = getComparator(C$.model,'pass','_pass')
-					setupErrorIndicator(name_$, name_conf_$, test_name)
-					setupErrorIndicator(pass_$, pass_conf_$, test_pass)
-					setupPassConfField(C$)
-				},
-				"form 2 validate style.display='none'":function(C$){
-					signin_form_el = C$.el
-					C$.dom = {
-					"label innerHTML='Email'":0,
-					"input type='email' name='name' required":0,
-					"label innerHTML='Password'":0,
-					"input type='password' name='pass' pattern='.{5,20}' required":0,
-					"button.left innerHTML='Sign-Up'":gotoSignup,
-					"button.right innerHTML='Submit'":signinSubmit
-					}
-					C$.model.onChange(['name', 'pass'], function(){
-						console.log( 'Sign-in form is valid? ' + C$.el.checkValidity() )
-					})
-				}
-			}
-		}
-	}
-
-
-	function signinSubmit(C$){
-		C$.onClick(function(ev){ ev.preventDefault()
-			window.alert('Form is valid? ' + signin_form_el.checkValidity())
-		})
-	}
-
-	function signupSubmit(C$){
-		C$.onClick(function(ev){
-			ev.preventDefault()
-			window.alert('Form is valid? ' + signup_form_el.checkValidity())
-		})
-	}
-
-	function gotoSignin(C$){
-		C$.onClick(function(ev){
-			ev.preventDefault()
-			signup_form_el.style.display = 'none'
-			signin_form_el.style.display = 'block'
-		})
-	}
-
-	function gotoSignup(C$){
-		C$.onClick(function(ev){ ev.preventDefault()
-			signin_form_el.style.display = 'none'
-			signup_form_el.style.display = 'block'
-		})
-	}
-
-	function setupErrorIndicator(C$a, C$b, test){
-		var updateErrorState = function(){ C$b.el.dataset.error = test() ? 'none' : 'invalid' }
-		C$a.onBlur(updateErrorState)
-		C$b.onBlur(updateErrorState)
-		C$b.onFocus(function(){ C$b.el.dataset.error = 'none' })
-	}
-
-	function getComparator(model, prop1, prop2){
-		return function(){ return model[prop1] === model[prop2] }
-	}
-
-	function setupPassConfField(C$){
-		C$.model.onChange([ 'name', '_name' ], function(){
-			name_conf_$.setValid( test_name(), 'Entries do not match.' ); console.log( 'Sign-up form is valid? '+C$.el.checkValidity() )
-		})
-		C$.model.onChange([ 'pass', '_pass' ], function(){
-			pass_conf_$.setValid( test_pass(), 'Entries do not match.' ); console.log( 'Sign-up form is valid? '+C$.el.checkValidity() )
-		})
-	}
-
-}
-
-},{}],3:[function(require,module,exports){
-
-module.exports = {
-  'div.row':{
-    'button href="/todos" innerHTML="All"':0,
-    'button href="/todos-incomplete" innerHTML="Incomplete"':0,
-    'button href="/todos-complete" innerHTML="Completed"':0,
-  }
-}
-
-},{}],4:[function(require,module,exports){
-
-/*
-
-Semi-colon line terminators are just FUD. If your minifier can't handle this code, switch to one that is JS-compliant.
-http://blog.izs.me/post/2353458699/an-open-letter-to-javascript-leaders-regarding
-http://inimino.org/~inimino/blog/javascript_semicolons
-
-The only time you EVER need a semi-colon for statement termination:
-;[1,2,3].map(function(val){ 'do stuff' })
-;(function(){ 'do stuff' })
-
-*/
-
-var concise = require('concise')
-
-var filter = {
-	'true': {
-		'true': 'block',
-		'false': 'none'
-	},
-	'false': {
-		'true': 'none',
-		'false': 'block'
-	},
-	'undefined': {
-		'true': 'block',
-		'false': 'block'
-	}
-}
-
-
-/**
- * This function is called by the controller constructor.
- * Simply return an object and Concise creates the view from it.
- * Here you can also add controller event listeners.
- */
-module.exports = function(ctrl){
-
-	// var list = ctrl.parent.models.list
-	// var show_when = ctrl.parent.show_when
-
-	var models = concise.models
-	var show_when = ctrl.show_when
-
-	// Create the view and attach all the view logic.
-	return {
-		'div#todo-component':{
-
-			'a.auth-me href="/join" innerHTML="login / register"':0,
-			'h1 innerHTML="To-Do\'s"':0,
-
-			// Include a partial.
-			'div.nav':require('./partials/nav'),
-
-			'div.list-container':{
-				'div.list-editor':{
-					'form':function(C$){
-						formLogic.call(this,C$)
-						C$.dom = {
-						'input.add-item-field type="text" name="new-item-field"':this.newItemInput,
-						'input.new-item-submit type="submit" value="add"':0
-						}
-					}
-				},
-
-				// Invoke the each() helper, calling the func on every item in `concise.models.list`.
-				'ul#items-list each(list)':function(C$,id,item){
-
-					// Use fn.call() to share `this`, our context object.
-					onEach.call(this,C$,id,item)
-					var ul_parent = this
-
-					C$.dom = { // Continue adding child nodes.
-					'li':function(C$){
-						ul_parent.liChild(C$)
-						C$.dom = {
-						'input type="checkbox"':ul_parent.itemCheckbox,
-						'input type="text"':ul_parent.itemInput,
-						'button.delete-this innerHTML="&times;"':ul_parent.itemDelete
-						}
-					}
-					}
-				},
-				'div.row.text-right': {
-					"button#delete innerHTML='clear completed'":deleteButton
-				}
-			}
-		}
-	}
-
-
-
-	function formLogic(C$){
-		var new_item_input = null
-
-		C$.onSubmit(function(ev){
-			ev.preventDefault()
-			models.list.push({ checked:false, text:new_item_input.value })
-			new_item_input.value = ''
-		})
-
-		this.newItemInput = function(C$){
-			new_item_input = C$.el
-		}
-	}
-
-
-	function deleteButton(C$){
-		C$.onClick(function(){
-			function removeCompleted(item, idx){
-				if (item.checked) models.list.splice( models.list.indexOf(item), 1 )
-				else idx++
-
-				if (idx < models.list.length) removeCompleted(models.list[idx], idx)
-			}
-			removeCompleted(models.list[0], 0)
-		})
-	}
-
-
-	function onEach(C$,id,item){
-
-		this.liChild = function(C$){
-			C$.el.style.display = filter[show_when][item.checked]
-
-			item.bind('checked',function(){
-				C$.el.style.display = filter[show_when][item.checked]
-			})
-		}
-
-		this.itemCheckbox = function(C$){
-			C$.el.checked = item.checked
-
-			item.bind('checked',function(val){ C$.el.checked = item.checked })
-
-			C$.onClick(function(ev){ item.checked = C$.el.checked })
-		}
-
-		this.itemDelete = function(C$){
-			C$.onClick(function(){
-				if (confirm('Delete this item?')) models.list.splice( models.list.indexOf(item), 1 )
-			})
-		}
-
-		this.itemInput = function(C$){
-			var wrap = item.fieldManager()
-
-			C$.onInput(inputHandler)
-			item.bind('text',outputHandler)
-
-			function inputHandler(ev){
-				wrap.input(function(){ item.text = C$.el.value })
-			}
-			function outputHandler(val){
-				wrap.output(function(){ C$.el.value = val })
-			}
-
-			C$.el.value = item.text
-		}
-
-	}
-
-}
-
-},{"./partials/nav":3,"concise":5}],5:[function(require,module,exports){
-
-/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Rob Christian
@@ -444,8 +68,8 @@ The only time you EVER need a semi-colon for statement termination:
 	 */
 
 	function Concise(){
-		this.ctrls = []
-		this.ctrls.active = null
+		this.controllers = {}
+		this.activeController = null
 	}
 
 	// Concise.prototype.useExtension = function(obj){
@@ -456,14 +80,16 @@ The only time you EVER need a semi-colon for statement termination:
 	// }
 
 	Concise.prototype.setView = function(ctrl){
-		var ccs = this
+		var self = this
 
-		if (ccs.ctrls.active !== ctrl) {
+		if (self.activeController !== ctrl) {
 
-			if (ccs.ctrls.active) ccs.ctrls.active.builder.el = vacateNode(document.body)
+			if (self.activeController) self.activeController.builder.el = vacateNode( concise.viewParent )
 
-			ccs.ctrls.active = ctrl
-			concise.viewParent.insertBefore(ctrl.builder.el, concise.viewParent.firstChild)
+			self.activeController = ctrl
+			if (concise.viewParent && /^HTML.*Element/.test(typeOf(concise.viewParent))) {
+				concise.viewParent.insertBefore(ctrl.builder.el, concise.viewParent.firstChild)
+			}
 		}
 	}
 
@@ -767,14 +393,6 @@ The only time you EVER need a semi-colon for statement termination:
 		else return true
 	}
 
-
-	if (typeof module !== 'undefined' && module.hasOwnProperty('exports')) {
-		module.exports = concise
-	} else {
-		global.concise = concise
-	}
-
-
 	function vacateNode(el){
 		var frag = new DocumentFragment()
 
@@ -784,15 +402,15 @@ The only time you EVER need a semi-colon for statement termination:
 		return frag
 	}
 
+	module.exports = global.concise = concise
 })()
 
-},{"./internal/concise.controller.js":6,"./internal/concise.helpers.js":8,"./internal/concise.model.js":9,"connected":11,"microevent":10,"runway/runway-browser.js":14,"typeof":16}],6:[function(require,module,exports){
+},{"./internal/concise.controller.js":2,"./internal/concise.helpers.js":4,"./internal/concise.model.js":5,"connected":7,"microevent":6,"runway/runway-browser.js":10,"typeof":12}],2:[function(require,module,exports){
 
 module.exports = function(concise, DEFINE, _ctrl_events, DomBuilder){
 
 	function Controller(name, constructor){
 		var self = this
-		concise.ctrls.push(self)
 		console.info('new controller:', name, self)
 
 		self._id = name || Math.random().toString().split('.')[1]
@@ -802,10 +420,12 @@ module.exports = function(concise, DEFINE, _ctrl_events, DomBuilder){
 
 		constructor.call(self)
 
-		return function(){
+		concise.controllers[name] = function(){
 			_ctrl_events.trigger(self._id)
 			concise.setView(self)
 		}
+
+		return concise.controllers[name]
 	}
 	Controller.prototype.onActive = function(fn){
 		_ctrl_events.bind(this._id, fn)
@@ -822,7 +442,7 @@ module.exports = function(concise, DEFINE, _ctrl_events, DomBuilder){
 	return Controller
 }
 
-},{}],7:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 
 module.exports = function each(C$, parent, child, constructor){
 	var self = this
@@ -899,13 +519,13 @@ module.exports = function each(C$, parent, child, constructor){
 // 	buildDom()
 // }
 
-},{}],8:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 module.exports = {
 	each: require('./concise.helpers.each.js')
 }
 
-},{"./concise.helpers.each.js":7}],9:[function(require,module,exports){
+},{"./concise.helpers.each.js":3}],5:[function(require,module,exports){
 
 module.exports = function(concise, Bindable){
 
@@ -917,7 +537,7 @@ module.exports = function(concise, Bindable){
 	}
 }
 
-},{}],10:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  *
@@ -969,7 +589,7 @@ if( typeof module !== "undefined" && ('exports' in module)){
 	module.exports	= MicroEvent
 }
 
-},{}],11:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 /*
 The MIT License (MIT)
@@ -1390,11 +1010,11 @@ The only time you EVER need a semi-colon for statement termination:
 
 })();
 
-},{"microevent":12,"typeof":16}],12:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"dup":10}],13:[function(require,module,exports){
-arguments[4][10][0].apply(exports,arguments)
-},{"dup":10}],14:[function(require,module,exports){
+},{"microevent":8,"typeof":12}],8:[function(require,module,exports){
+arguments[4][6][0].apply(exports,arguments)
+},{"dup":6}],9:[function(require,module,exports){
+arguments[4][6][0].apply(exports,arguments)
+},{"dup":6}],10:[function(require,module,exports){
 
 /*
 
@@ -1464,7 +1084,7 @@ function init(){
 
 window.addEventListener ? addEventListener('load', init, false) : window.attachEvent ? attachEvent('onload', init) : (onload = init)
 
-},{"./runway.js":15}],15:[function(require,module,exports){
+},{"./runway.js":11}],11:[function(require,module,exports){
 
 /*!
  * Runway Router
@@ -1655,7 +1275,7 @@ function regexCompare(a,b){
 }
 
 
-},{"microevent":13,"typeof":16}],16:[function(require,module,exports){
+},{"microevent":9,"typeof":12}],12:[function(require,module,exports){
 
 /*
  * This is where these helper functions will live for now. Development of ConciseJS will continue
