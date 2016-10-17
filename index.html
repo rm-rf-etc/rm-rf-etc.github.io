@@ -56,6 +56,8 @@
 <h2>
 <a id="encore-a-node-mvc" class="anchor" href="#encore-a-node-mvc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Encore: A Node MVC</h2>
 
+<a href="//github.com/rm-rf-etc/encore">github.com/rm-rf-etc/encore</a>
+
 <p>Back when I was getting interested in node.js, I was frustrated by a seeming lack of structure in express projects. I preferred MVC at the time, so I started toying with ways to make a node app structured more like my favorite MVC's.</p>
 
 <p>First I made a router (I didn't care for the routers I found on github). Express will test all routes in order, which isn't optimal. Runway.js instead tests each segment in order, and supports arbitrary RegEx patterns. Internally, runway uses standard tools from lodash to build a tree by creating each branch and then merging it into the tree.</p>
